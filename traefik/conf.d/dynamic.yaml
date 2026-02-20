@@ -1,0 +1,81 @@
+# Dynamic configuration: TLS, middlewares, and manual routers
+# This file lives at /etc/traefik/conf.d/dynamic.yaml
+
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: "/etc/traefik/mycerts/cert.crt"
+        keyFile: "/etc/traefik/mycerts/server.key"
+  certificates:
+    - certFile: "/etc/traefik/mycerts/cert.crt"
+      keyFile: "/etc/traefik/mycerts/server.key"
+      stores:
+        - default
+
+http:
+  middlewares:
+    # Basic auth for the Traefik dashboard
+    dashboard-auth:
+      basicAuth:
+        users:
+          - "admin:YOUR_BCRYPT_HASH_HERE"
+
+    # Security headers applied to most routers
+    security-headers:
+      headers:
+        sslRedirect: true
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        stsPreload: true
+        forceSTSHeader: true
+        frameDeny: true
+        contentTypeNosniff: true
+        browserXssFilter: true
+        referrerPolicy: "strict-origin-when-cross-origin"
+        customFrameOptionsValue: "SAMEORIGIN"
+
+    # Rate limiting
+    rate-limit:
+      rateLimit:
+        average: 100
+        burst: 50
+
+  routers:
+    # Hubitat home automation hub (physical IoT device, no Docker/Proxmox)
+    hubitat:
+      entryPoints:
+        - "websecure"
+      rule: "Host(`hubitat.example.com`)"
+      service: hubitat
+      middlewares:
+        - security-headers
+        - rate-limit
+
+    # Traefik dashboard
+    dashboard:
+      rule: "Host(`traefik.example.com`)"
+      service: api@internal
+      entryPoints:
+        - websecure
+      middlewares:
+        - dashboard-auth
+        - security-headers
+        - rate-limit
+
+  services:
+    # Hubitat uses HTTPS with a self-signed cert
+    hubitat:
+      loadBalancer:
+        serversTransport: insecure
+        healthCheck:
+          path: /
+          interval: 30s
+          timeout: 5s
+        servers:
+          - url: "https://192.0.2.50:443"
+
+  # Allow connecting to backends with self-signed certs
+  serversTransports:
+    insecure:
+      insecureSkipVerify: true

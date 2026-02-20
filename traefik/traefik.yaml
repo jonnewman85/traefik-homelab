@@ -1,0 +1,97 @@
+# Traefik v3 Static Configuration
+# This file lives at /etc/traefik/traefik.yaml
+
+providers:
+  providersThrottleDuration: 2s
+
+  # File provider: manual routers, middlewares, TLS config
+  file:
+    directory: /etc/traefik/conf.d/
+    watch: true
+
+  # Redis provider: routes published by traefik-kop from remote Docker hosts
+  redis:
+    endpoints:
+      - "127.0.0.1:6379"
+    password: "YOUR_REDIS_PASSWORD"
+
+  # Proxmox provider: auto-discover VMs/containers with traefik labels
+  # Using a custom local plugin fork with multi-node support
+  plugin:
+    traefik-proxmox-provider:
+      pollInterval: "5s"
+      nodes:
+        - name: "pve-node-1"
+          apiEndpoint: "https://192.0.2.20:8006"
+          apiTokenId: "root@pam!traefik_prod"
+          apiToken: "YOUR_PVE_NODE1_API_TOKEN"
+          apiLogging: "warn"
+          apiValidateSSL: "false"
+        - name: "pve-node-2"
+          apiEndpoint: "https://192.0.2.21:8006"
+          apiTokenId: "root@pam!traefik_prod"
+          apiToken: "YOUR_PVE_NODE2_API_TOKEN"
+          apiLogging: "info"
+          apiValidateSSL: "false"
+
+entryPoints:
+  # HTTP → HTTPS redirect
+  web:
+    address: ':80'
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+
+  # Main HTTPS entrypoint with wildcard TLS
+  websecure:
+    address: ':443'
+    http:
+      tls:
+        domains:
+          - main: example.com
+            sans:
+              - "*.example.com"
+
+  # Dashboard (localhost only)
+  traefik:
+    address: "127.0.0.1:8080"
+
+api:
+  dashboard: true
+  insecure: true
+
+log:
+  filePath: /var/log/traefik/traefik.log
+  format: json
+  level: INFO
+
+accessLog:
+  filePath: /var/log/traefik/traefik-access.log
+  format: json
+  filters:
+    statusCodes:
+      - "400-599"
+    retryAttempts: true
+    minDuration: "10ms"
+  bufferingSize: 0
+  fields:
+    headers:
+      defaultMode: drop
+      names:
+        User-Agent: keep
+
+# Local plugin (built from source, not fetched from Traefik Pilot)
+experimental:
+  localPlugins:
+    traefik-proxmox-provider:
+      moduleName: github.com/NX211/traefik-proxmox-provider
+
+serversTransport:
+  insecureSkipVerify: false
+  maxIdleConnsPerHost: 200
+  forwardingTimeouts:
+    dialTimeout: 30s
+    responseHeaderTimeout: 30s
+    idleConnTimeout: 90s

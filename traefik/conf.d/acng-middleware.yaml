@@ -1,0 +1,6 @@
+http:
+  middlewares:
+    acng-rewrite:
+      replacePathRegex:
+        regex: "^/.*"
+        replacement: "/acng-report.html"

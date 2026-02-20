@@ -1,0 +1,13 @@
+# Secrets
+.env
+*.key
+*.pem
+redis-password.txt
+
+# Runtime
+.last_hash
+backups/
+*.log
+
+# OS
+.DS_Store
