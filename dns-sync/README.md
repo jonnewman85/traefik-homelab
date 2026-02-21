@@ -2,7 +2,7 @@
 
 A custom Python script that automatically syncs Traefik router hostnames to [Pi-hole v6](https://pi-hole.net/) local DNS records. Every service routed through Traefik automatically gets a DNS entry pointing to the Traefik host — no manual DNS configuration needed.
 
-**Standalone repo:** [jonnewman85/traefik-pihole-sync](https://github.com/jonnewman85/traefik-pihole-sync)
+**Standalone repo:** [jonmilele/traefik-pihole-sync](https://github.com/jonmilele/traefik-pihole-sync)
 
 ## How It Works
 

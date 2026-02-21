@@ -91,13 +91,13 @@ Core Traefik configuration:
 - `traefik.service` — systemd unit file
 
 ### [traefik-proxmox-provider/](traefik-proxmox-provider/)
-Custom fork of the Proxmox provider plugin that adds **multi-node support** — configure multiple independent Proxmox hosts, each with their own API credentials. Services are discovered by reading traefik labels from VM/container Description fields. See the [traefik-proxmox-provider-multi-node](https://github.com/jonnewman85/traefik-proxmox-provider-multi-node) repo for the full source.
+Custom fork of the Proxmox provider plugin that adds **multi-node support** — configure multiple independent Proxmox hosts, each with their own API credentials. Services are discovered by reading traefik labels from VM/container Description fields. See the [traefik-proxmox-provider-multi-node](https://github.com/jonmilele/traefik-proxmox-provider-multi-node) repo for the full source.
 
 ### [traefik-kop/](traefik-kop/)
 How [traefik-kop](https://github.com/jittering/traefik-kop) bridges Docker containers on other VMs and LXCs to Traefik via Redis. Containers use standard Traefik Docker labels, and traefik-kop publishes them to Redis where Traefik's Redis provider picks them up.
 
 ### [dns-sync/](dns-sync/)
-A custom Python script that automatically syncs Traefik router hostnames to Pi-hole v6 local DNS. Runs every 2 minutes via cron, with change detection, backup/rollback, and per-instance Pi-hole authentication. See the [traefik-pihole-sync](https://github.com/jonnewman85/traefik-pihole-sync) repo for the standalone version.
+A custom Python script that automatically syncs Traefik router hostnames to Pi-hole v6 local DNS. Runs every 2 minutes via cron, with change detection, backup/rollback, and per-instance Pi-hole authentication. See the [traefik-pihole-sync](https://github.com/jonmilele/traefik-pihole-sync) repo for the standalone version.
 
 ## DNS
 
@@ -171,7 +171,7 @@ No action needed — the dns-sync script will automatically detect the new hostn
 - [Traefik Local Plugins](https://doc.traefik.io/traefik/plugins/local/) — How the Proxmox provider is loaded
 - [traefik-kop](https://github.com/jittering/traefik-kop) — Publishes Docker container labels to Redis for Traefik
 - [traefik-proxmox-provider](https://github.com/NX211/traefik-proxmox-provider) — Upstream Proxmox provider plugin
-- [traefik-proxmox-provider-multi-node](https://github.com/jonnewman85/traefik-proxmox-provider-multi-node) — My fork with multi-node support
-- [traefik-pihole-sync](https://github.com/jonnewman85/traefik-pihole-sync) — My standalone Pi-hole DNS sync script
+- [traefik-proxmox-provider-multi-node](https://github.com/jonmilele/traefik-proxmox-provider-multi-node) — My fork with multi-node support
+- [traefik-pihole-sync](https://github.com/jonmilele/traefik-pihole-sync) — My standalone Pi-hole DNS sync script
 - [Pi-hole v6 API](https://docs.pi-hole.net/api/) — REST API used by the dns-sync script
 - [Pi-hole v6 Authentication](https://docs.pi-hole.net/api/auth/) — Session-based auth used by the dns-sync script

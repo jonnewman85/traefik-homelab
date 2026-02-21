@@ -2,7 +2,7 @@
 
 A custom fork of [NX211/traefik-proxmox-provider](https://github.com/NX211/traefik-proxmox-provider) that adds **multi-node support** — the ability to configure multiple independent Proxmox hosts, each with their own API credentials.
 
-**Full source:** [jonnewman85/traefik-proxmox-provider-multi-node](https://github.com/jonnewman85/traefik-proxmox-provider-multi-node)
+**Full source:** [jonmilele/traefik-proxmox-provider-multi-node](https://github.com/jonmilele/traefik-proxmox-provider-multi-node)
 
 ## Why a Fork?
 
